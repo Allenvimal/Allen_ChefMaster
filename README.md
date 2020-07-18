@@ -12,3 +12,6 @@
 
  Programmer-art version of **Salad Chef** simulation, a Couch Co-Op game for two players in Windows platform.
  
+## Developer information
+
+ Refer ChangeLog for details on the project commits.
