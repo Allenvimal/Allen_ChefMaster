@@ -3,11 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+/// <summary>
+/// 
+/// Controls the Player
+/// - Player movement controls can the chosed from [playerControl] (i.e., Player_1 or Player_2)
+/// - Player_1 controls
+///     - w => Up
+///     - s => Down
+///     - a => Right
+///     - d => Left
+///     - h => Pickup item
+///     - j => Drop item
+/// - Player_2 controls
+///     - up_arrow => Up
+///     - down_arrow => Down
+///     - right_arrow => Right
+///     - left_arrow => Left
+///     - Num_4 => Pickup item
+///     - Num_5 => Drop item
+///     
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     GameObject player;
 
     public float moveSpeed;
+
+    public Player playerContorl;
 
     public string horizontalAxis = "Horizontal_P1";
     public string verticalAxis = "Vertical_P1";
@@ -22,7 +44,7 @@ public class PlayerController : MonoBehaviour
     public Transform[] placeHolders;
 
 
-    public bool playerControl;
+    public bool isPlayerInteractable;
 
     public bool removeflag;
 
@@ -43,23 +65,38 @@ public class PlayerController : MonoBehaviour
     public int score;
 
     public bool gotChoppedItem;
+
+    public GameObject bowl;
+
     // Start is called before the first frame update
     void Start()
     {
+        Initialise();
         score = 0;
-        playerControl = true;
+        isPlayerInteractable = true;
         pointer = 0;
         player = this.gameObject;
         vegetables = new List<GameObject>();
         gameManager = GameManager.Instance;
     }
 
+    void Initialise()   //Innitialise current player control keys
+    {
+        horizontalAxis = "Horizontal_" + playerContorl;
+        verticalAxis = "Vertical_" + playerContorl;
+
+        pickupItem = "Pickup_" + playerContorl;
+        dropItem = "Drop_" + playerContorl;
+
+    }
+
     // Update is called once per frame
     void Update()
     {
         //Player movement Control
+        #region Player movement Control
 
-        if (playerControl)
+        if (isPlayerInteractable)
         {
             var horizontal = Input.GetAxis(horizontalAxis);
             var vertical = Input.GetAxis(verticalAxis);
@@ -72,141 +109,62 @@ public class PlayerController : MonoBehaviour
                 player.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
             }
         }
+        #endregion
 
         //Player interactions 
+        #region Player interactions  
 
-        if (playerControl && doAction)
+        if (isPlayerInteractable)
         {
-            if (Input.GetButtonDown(pickupItem))
+            if (collidedObject != null && collidedObject.tag == "Interactable")
             {
-                if (collidedObject.tag == "Vegetable")
+                if (Input.GetButtonDown(pickupItem))
                 {
-                    Debug.Log("item Picked");
-
-                    if (pointer < 2)
+                    var interfaceFunction = collidedObject.GetComponent<InterfaceFunctions>();
+                    if (interfaceFunction != null)
                     {
-                        var currentVegetabe = collidedObject.GetComponent<VegetableBasket>().vegetable;
-                        var itemPicked = Instantiate(gameManager.vegetables[(int)currentVegetabe], placeHolders[pointer]);
-
-                        vegetables.Add(itemPicked);
-                        RearrangeOrder();
-                        pointer++;
+                        if (!collidedObject.GetComponent<InterfaceFunctions>().OnItemPickup(this))
+                            Debug.Log("Method not Implemented");
                     }
                 }
-                else if (collidedObject.tag == "ChoppingBoard")
+                if (Input.GetButtonDown(dropItem))
                 {
-                    gotChoppedItem = true;
-                    Debug.Log("item Picked from Chopping Board");
-                }
-            }
-            if (Input.GetButtonDown(dropItem))
-            {
-                if (collidedObject.tag == "ChoppingBoard")
-                {
-                    Debug.Log("item droped");
-
-                    var waittime = vegetables[0].GetComponent<Vegetable>().choppingTime;
-
-                    playerControl = false;
-                    StartCoroutine(StartChopping(waittime));
-                    
-                    pointer--;
-
-                }
-                if (collidedObject.tag == "Customer" && gotChoppedItem)
-                {
-                    gotChoppedItem = false;
-                    saladClass = collidedObject.GetComponent<Customer>().currentList;
-                    if (saladClass.vegetables.Length == combinationList.Count)
+                    var interfaceFunction = collidedObject.GetComponent<InterfaceFunctions>();
+                    if (interfaceFunction != null)
                     {
-                        /*   eaqualItems = saladClass.vegetables.Intersect(combinationList);
-                          var repeatValue = saladClass.vegetables.Distinct();
-                          if(eaqualItems.Count() == saladClass.vegetables.Length-repeatValue.Count())
-                          {
-                              correctItem = true;
-                              Debug.Log("Correct item ");
-                          }
-                          else
-                          {
-                              correctItem = false;
-                              Debug.Log("Incorrect item ");
-
-                          }*/
-
-
-
-                        dummyList = new List<InventoryEnum>(combinationList);
-
-                        for (int i = 0; i < saladClass.vegetables.Length; i++)
-
-                        {
-                            for (int j = 0; j < dummyList.Count; j++)
-                            {
-                                if (saladClass.vegetables[i] == dummyList[j])
-                                {
-                                    correctItem = true;
-                                    dummyList.Remove(dummyList[j]);
-                                    Debug.Log("Correct loop" + "saladClass " + i + " : combination " + j);
-                                    break;
-                                }
-                            }
-                        }
+                        if (!collidedObject.GetComponent<InterfaceFunctions>().OnItemDrop(this))
+                            Debug.Log("Method Not Implemented");
                     }
-                    else
-                    {
-                        correctItem = false;
-                        Debug.Log("Incorrect item list count");
-
-                    }
-
-                    if (correctItem && dummyList.Count == 0)
-                    {
-                       
-                        score++;
-                        Debug.Log("Current Score: " + score);
-                    }
-                    combinationList = new List<InventoryEnum>();
                 }
             }
         }
+        #endregion
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        collidedObject = other;
-        doAction = true;
-     
+        if (other.tag == "Interactable")
+            collidedObject = other;
+        else if (other.tag == "Pickup")
+        {
+            //do action
+        }
+
     }
 
     private void OnTriggerExit(Collider other)
     {
         collidedObject = null;
-        doAction = false;
     }
 
-    IEnumerator StartChopping(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
-
-        var item = vegetables[0];
-        item.transform.parent = chopPos;
-        item.transform.localPosition = Vector3.zero;
-        combinationList.Add(item.GetComponent<Vegetable>().vegetableType);
-        item.GetComponent<Vegetable>().model.SetActive(false);
-        item.GetComponent<Vegetable>().ChoppedModel.SetActive(true);
-        vegetables.Remove(item);
-
-        playerControl = true;
-    }
-
-    void RearrangeOrder()
+    public void RearrangeOrder()
     {
         if (pointer > 0)
         {
             for (int i = 0; i < vegetables.Count; i++)
             {
                 var nextPos = vegetables[i];
-                nextPos.transform.parent = placeHolders[i+1];
+                nextPos.transform.parent = placeHolders[i + 1];
                 nextPos.transform.localPosition = Vector3.zero;
             }
         }

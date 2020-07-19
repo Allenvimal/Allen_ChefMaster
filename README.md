@@ -14,4 +14,5 @@
  
 ## Developer information
 
- Refer ChangeLog for details on the project commits.
+ Refer [ChangeLog](https://github.com/Allenvimal/Allen_ChefMaster/blob/master/ChangeLog.md) for details on the project commits.
+ Refer [Instruction](https://github.com/Allenvimal/Allen_ChefMaster/blob/master/Instruction.md) for details on gameplay.

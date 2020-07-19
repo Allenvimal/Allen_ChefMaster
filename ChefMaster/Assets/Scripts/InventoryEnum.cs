@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 public enum InventoryEnum
 {
     Vegitable_a,
@@ -12,7 +9,8 @@ public enum InventoryEnum
     Vegitable_f,
 }
 
-public enum Saladlist
+public enum Player
 {
-
+    P1,
+    P2,
 }

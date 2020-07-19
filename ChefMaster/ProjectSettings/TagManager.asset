@@ -7,6 +7,8 @@ TagManager:
   - Vegetable
   - ChoppingBoard
   - Customer
+  - Plate
+  - Interactable
   layers:
   - Default
   - TransparentFX

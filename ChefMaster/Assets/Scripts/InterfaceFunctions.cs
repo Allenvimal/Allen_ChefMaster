@@ -1,18 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class InterfaceFunctions : MonoBehaviour
+﻿
+public interface InterfaceFunctions 
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    bool OnItemPickup(PlayerController playerScript);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    bool OnItemDrop(PlayerController playerScript);
 }

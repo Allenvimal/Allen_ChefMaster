@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// Controls the current Scene flow
+/// 
+/// </summary>
+
 [System.Serializable]
 public class SaladClass
 {
