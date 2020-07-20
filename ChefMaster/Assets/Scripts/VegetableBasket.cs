@@ -12,7 +12,7 @@ public class VegetableBasket : MonoBehaviour,InterfaceFunctions
 
     public bool OnItemDrop(PlayerController playerScript)
     {
-        if (playerScript.vegetables.Count > 0)
+        if (playerScript.vegetables.Count > 0 )
         {
             var currentVegetable = playerScript.vegetables[0].GetComponent<Vegetable>();
             if (currentVegetable.vegetableType == vegetablePrefab.GetComponent<Vegetable>().vegetableType)
@@ -27,7 +27,7 @@ public class VegetableBasket : MonoBehaviour,InterfaceFunctions
 
     public bool OnItemPickup(PlayerController playerScript)
     {
-        if (playerScript.pointer < 2)
+        if (playerScript.pointer < 2 && !playerScript.gotChoppedItem)
         {
             var itemPicked = Instantiate(vegetablePrefab, playerScript.placeHolders[playerScript.pointer]);
             itemPicked.transform.localPosition = Vector3.zero;

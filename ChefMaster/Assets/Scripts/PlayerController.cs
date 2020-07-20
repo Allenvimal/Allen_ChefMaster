@@ -25,6 +25,8 @@ using System.Linq;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
+   
+
     GameObject player;
 
     public float moveSpeed;
@@ -68,14 +70,18 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bowl;
 
+    public float playerTime;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = this.gameObject;
+        playerTime = 120f;
         Initialise();
         score = 0;
         isPlayerInteractable = true;
         pointer = 0;
-        player = this.gameObject;
+       
         vegetables = new List<GameObject>();
         gameManager = GameManager.Instance;
     }
@@ -87,6 +93,8 @@ public class PlayerController : MonoBehaviour
 
         pickupItem = "Pickup_" + playerContorl;
         dropItem = "Drop_" + playerContorl;
+
+        player.layer = LayerMask.NameToLayer(playerContorl.ToString());
 
     }
 
@@ -139,6 +147,8 @@ public class PlayerController : MonoBehaviour
             }
         }
         #endregion
+
+
     }
 
     private void OnTriggerEnter(Collider other)

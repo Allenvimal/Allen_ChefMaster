@@ -19,7 +19,7 @@ public class Plate : MonoBehaviour,InterfaceFunctions
 
     public bool OnItemPickup(PlayerController playerScript)
     {
-        if (playerScript.pointer < 2 && vegetablePlaced != null)
+        if (playerScript.pointer < 2 && vegetablePlaced!=null)
         {
             var itemPicked = vegetablePlaced;
             itemPicked.transform.parent = playerScript.placeHolders[playerScript.pointer];
@@ -27,6 +27,7 @@ public class Plate : MonoBehaviour,InterfaceFunctions
             playerScript.vegetables.Add(itemPicked);
             playerScript.RearrangeOrder();
             playerScript.pointer++;
+            vegetablePlaced = null;
         }
         return true;
     }

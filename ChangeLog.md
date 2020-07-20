@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.0.3] - 20-07-2020
+### Changed
+- Customer wait time and oder list updated in customer script.
+- Player_1 score event updaed in UIManager.
+### Fixed
+- Now player can now place the vegetable back to the basket.
+- Player cannot grab vegetable while carrying bowl
+ 
+
 ## [0.0.2] - 19-07-2020
 ### Added
 - Added Interface function.
@@ -12,7 +21,7 @@
 - README file updated.
 - Interface function is used instead of Tags for player interaction.
 - Major changes in player control script.
--  Separate script created for individual intractable objects. 
+- Separate script created for individual intractable objects. 
 ### Fixed
 - Item pickup and drop action bug fixed. 
 

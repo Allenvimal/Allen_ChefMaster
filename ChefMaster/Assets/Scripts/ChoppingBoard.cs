@@ -37,7 +37,6 @@ public class ChoppingBoard : MonoBehaviour,InterfaceFunctions
             {
 
                 var go = placedVegetables[i - 1];
-                Debug.Log(go);
                 placedVegetables.Remove(go);
                 Destroy(go.gameObject);
             }
