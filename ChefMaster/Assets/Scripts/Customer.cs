@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 
@@ -20,8 +20,6 @@ using System.Linq;
 
 public class Customer : MonoBehaviour,InterfaceFunctions
 {
-    public static event Action<Player> IncreaseScore;
-
     public SaladClass currentList;
 
     public List<InventoryEnum> dummyList;
@@ -40,6 +38,8 @@ public class Customer : MonoBehaviour,InterfaceFunctions
 
     public bool isCustomerActive;
 
+    public GameObject orderDisplay;
+
     public bool OnItemDrop(PlayerController playerScript)
     {
         if (playerScript.gotChoppedItem)
@@ -48,23 +48,6 @@ public class Customer : MonoBehaviour,InterfaceFunctions
             Destroy(playerScript.bowl);
             if (currentList.vegetables.Length == playerScript.combinationList.Count)
             {
-
-
-
-                /*   eaqualItems = saladClass.vegetables.Intersect(combinationList);
-                  var repeatValue = saladClass.vegetables.Distinct();
-                  if(eaqualItems.Count() == saladClass.vegetables.Length-repeatValue.Count())
-                  {
-                      correctItem = true;
-                      Debug.Log("Correct item ");
-                  }
-                  else
-                  {
-                      correctItem = false;
-                      Debug.Log("Incorrect item ");
-
-                  }*/
-
                 dummyList = new List<InventoryEnum>(playerScript.combinationList);
                 for (int i = 0; i < currentList.vegetables.Length; i++)
                 {
@@ -87,18 +70,18 @@ public class Customer : MonoBehaviour,InterfaceFunctions
             if (playerScript.correctItem)
             {
                 ResetCustomer();
-                playerScript.score+=5;
+                playerScript.score+=1;
 
-                if (IncreaseScore != null)
-                    IncreaseScore(playerScript.playerContorl);
-
-
-                //reward Player
-                Debug.Log("Reward Player : " +playerScript.score );
 
                 if (timeValue >= 0.7f)
                 {
-                    Debug.Log("playergets pickup");
+                    var randomPickup = Random.Range(0, gameManager.pickups.Length);
+                    var pickupPos = new Vector3(Random.Range(-5f,5f),0f, Random.Range(-3f, 3f));
+                    var pickup = (Pickup)Instantiate(gameManager.pickups[randomPickup]);
+                    pickup.transform.position = pickupPos;
+                    pickup.playerTag = playerScript.playerContorl.ToString();
+
+                    Debug.Log("playergets pickup: " + pickup.name);
                 }
             }
             else
@@ -122,13 +105,7 @@ public class Customer : MonoBehaviour,InterfaceFunctions
         currentOrder = new List<Vegetable>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if (isCustomerActive)
@@ -146,19 +123,18 @@ public class Customer : MonoBehaviour,InterfaceFunctions
             }
         }
     }
+
     private void OnEnable()
     {
         GetSaladList();
     }
 
-    private void OnDisable()
-    {
-       
-    }
     void GetSaladList()
     {
+        orderDisplay.SetActive(true);
+
         waitTimeIndicator.fillAmount = 1f;
-        var value = UnityEngine.Random.Range(0, gameManager.saladList.Length);
+        var value = Random.Range(0, gameManager.saladList.Length);
         currentList = gameManager.saladList[value];
 
         customerWaitTime = 0f;
@@ -186,6 +162,7 @@ public class Customer : MonoBehaviour,InterfaceFunctions
         }
         currentOrder = new List<Vegetable>();
         waitTimeIndicator.fillAmount = 0f;
+        orderDisplay.SetActive(false);
         StartCoroutine(SpawnNewCustomer());
     }
 

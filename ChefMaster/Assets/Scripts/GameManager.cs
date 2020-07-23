@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     public PlayerController player_P1;
     public PlayerController player_P2;
 
+    public Pickup[] pickups;
+
     // Start is called before the first frame update
     void Start()
     {

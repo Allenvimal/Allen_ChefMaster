@@ -1,5 +1,22 @@
 # Change Log
 
+## [Roadmap] - the following can be expected in next updated
+- Adding tooltips to the components.
+- Updating the scripts to be more modular.
+- Converting item prefabs from Mono Behaviour to Scriptable Object.
+- Implementing UI for vegetable cutting time.
+- Implementing player penalty system.
+- Implementing game over scenario.
+
+## [0.0.4] - 23-07-2020
+### Added
+- Trashcan function added.
+- Pickups added.
+- Multiple Customers added.
+### Changed
+- Customer script updated.
+- Pickups changes player stats.
+
 ## [0.0.3] - 20-07-2020
 ### Changed
 - Customer wait time and oder list updated in customer script.
@@ -7,7 +24,6 @@
 ### Fixed
 - Now player can now place the vegetable back to the basket.
 - Player cannot grab vegetable while carrying bowl
- 
 
 ## [0.0.2] - 19-07-2020
 ### Added

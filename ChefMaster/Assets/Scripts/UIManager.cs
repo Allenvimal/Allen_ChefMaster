@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 /// <summary>
 /// 
@@ -46,23 +47,27 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time_P1.text = gameManager.player_P1.playerTime.ToString();
-       
+        var time = Mathf.RoundToInt(gameManager.player_P1.playerTime);
+        time_P1.text = time.ToString();
+        time = Mathf.RoundToInt(gameManager.player_P2.playerTime);
+        time_P2.text = time.ToString();
+
     }
     private void OnEnable()
     {
-        Customer.IncreaseScore += IncreaseScore;
+        PlayerController.IncreaseScore += IncreaseScore;
     }
 
     private void OnDisable()
     {
-        Customer.IncreaseScore -= IncreaseScore;
+        PlayerController.IncreaseScore -= IncreaseScore;
     }
 
     void IncreaseScore(Player player)
     {
         if (player == Player.P1)
         {
+
             score_P1.text = gameManager.player_P1.score.ToString();
         }
         else if (player == Player.P2)

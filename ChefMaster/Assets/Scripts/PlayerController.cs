@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 /// <summary>
 /// 
@@ -25,7 +26,8 @@ using System.Linq;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
-   
+
+    public static event Action<Player> IncreaseScore;
 
     GameObject player;
 
@@ -65,20 +67,27 @@ public class PlayerController : MonoBehaviour
     public Transform chopPos;
 
     public int score;
+    public int lastScore;
 
     public bool gotChoppedItem;
 
     public GameObject bowl;
 
     public float playerTime;
+    public float playerStartTime;
+    public bool isPlayerDead;
+    public float extraSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
         player = this.gameObject;
-        playerTime = 120f;
+        playerTime = playerStartTime;
+        isPlayerDead = false;
+
         Initialise();
         score = 0;
+        lastScore = 0;
         isPlayerInteractable = true;
         pointer = 0;
        
@@ -101,11 +110,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Player movement Control
-        #region Player movement Control
-
         if (isPlayerInteractable)
         {
+            //Player movement Control
+            #region Player movement Control
+
+
             var horizontal = Input.GetAxis(horizontalAxis);
             var vertical = Input.GetAxis(verticalAxis);
 
@@ -114,16 +124,14 @@ public class PlayerController : MonoBehaviour
                 float myAngle = Mathf.Atan2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis)) * Mathf.Rad2Deg;
 
                 player.transform.rotation = Quaternion.Euler(0f, myAngle, 0f);
-                player.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
+                player.transform.Translate(Vector3.forward * Time.deltaTime * (moveSpeed+extraSpeed));
             }
-        }
-        #endregion
+            #endregion
 
-        //Player interactions 
-        #region Player interactions  
+            //Player interactions 
+            #region Player interactions  
 
-        if (isPlayerInteractable)
-        {
+
             if (collidedObject != null && collidedObject.tag == "Interactable")
             {
                 if (Input.GetButtonDown(pickupItem))
@@ -145,9 +153,30 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-        }
-        #endregion
+            #endregion
 
+            PlayerTimer();
+        }
+
+        if(score != lastScore && IncreaseScore != null)
+        {
+            lastScore = score;
+            IncreaseScore(playerContorl);
+        }
+    }
+
+void PlayerTimer()
+    {
+        if(playerTime>=0)
+        {
+            playerTime -= Time.deltaTime;
+
+        }
+        else
+        {
+            isPlayerInteractable = false;
+            isPlayerDead = true;
+        }
 
     }
 
@@ -179,6 +208,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
 
 
