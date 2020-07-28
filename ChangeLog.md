@@ -7,8 +7,6 @@
 - Implementing UI for vegetable cutting time.
 - Implementing player penalty system.
 - Implementing game over scenario.
-- Adding audio events.
-- Adding effects on pickups.
 
 ## [0.0.4] - 23-07-2020
 ### Added
